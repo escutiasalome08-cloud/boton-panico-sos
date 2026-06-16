@@ -1,114 +1,71 @@
-// Variables globales para almacenar las coordenadas GPS
-let latitudGlobal = null;
-let longitudGlobal = null;
+document.addEventListener('DOMContentLoaded', () => {
+    const sosButton = document.getElementById('sosButton');
+    const saveButton = document.getElementById('saveContacts');
+    const statusDiv = document.getElementById('status');
 
-// Ejecutar inmediatamente al abrir la aplicación
-document.addEventListener("DOMContentLoaded", () => {
-    solicitarGPS();
-    cargarContactos();
-});
+    // Cargar contactos guardados previamente
+    document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
+    document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
+    document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
 
-// FUNCIÓN ESTRICTA DE GEOLOCALIZACIÓN
-function solicitarGPS() {
-    const statusDiv = document.getElementById('gpsStatus');
-    const btnSos = document.getElementById('btnSos');
-
-    if (!navigator.geolocation) {
-        statusDiv.innerText = "Tu navegador no soporta geolocalización. App bloqueada.";
-        statusDiv.style.backgroundColor = "#f8d7da";
-        statusDiv.style.color = "#721c24";
-        return;
-    }
-
-    // Intentamos obtener la ubicación con alta precisión
-    navigator.geolocation.watchPosition(
-        (position) => {
-            latitudGlobal = position.coords.latitude;
-            longitudGlobal = position.coords.longitude;
-
-            // Si se consiguen con éxito, actualizamos la interfaz y habilitamos el botón
-            statusDiv.innerText = "GPS Conectado de forma segura y obligatoria";
-            statusDiv.className = "gps-status gps-success";
-            btnSos.disabled = false;
-        },
-        (error) => {
-            console.error(error);
-            statusDiv.innerText = "Acceso a GPS denegado. Es obligatorio activarlo para reportar.";
-            statusDiv.style.backgroundColor = "#f8d7da";
-            statusDiv.style.color = "#721c24";
-            btnSos.disabled = true; // El botón permanece bloqueado si no hay GPS
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-    );
-}
-
-// MANEJO DE CONTACTOS CON LOCALSTORAGE (Mecanismo del navegador)
-function guardarContactos() {
-    const c1 = document.getElementById('contacto1').value;
-    const c2 = document.getElementById('contacto2').value;
-    const c3 = document.getElementById('contacto3').value;
-
-    const contactos = { contacto1: c1, contacto2: c2, contacto3: c3 };
-    
-    // Almacenamos el objeto convertido a texto en la memoria del navegador
-    localStorage.setItem('sos_contactos', JSON.stringify(contactos));
-    alert("Contactos de emergencia guardados localmente.");
-}
-
-function cargarContactos() {
-    const guardados = localStorage.getItem('sos_contactos');
-    if (guardados) {
-        const contactos = JSON.parse(guardados);
-        document.getElementById('contacto1').value = contactos.contacto1 || '';
-        document.getElementById('contacto2').value = contactos.contacto2 || '';
-        document.getElementById('contacto3').value = contactos.contacto3 || '';
-    }
-}
-
-// ENVÍO DE DATOS AL BACKEND DE PYTHON
-function enviarAlertaServidor() {
-    // Validación de seguridad de último momento
-    if (!latitudGlobal || !longitudGlobal) {
-        alert("Error: No se puede enviar el reporte sin coordenadas GPS.");
-        return;
-    }
-
-    const btnSos = document.getElementById('btnSos');
-    btnSos.disabled = true; // Evita que se presione muchas veces por pánico
-    btnSos.innerText = "...";
-
-    // Recolectamos la información del formulario
-    const payload = {
-        incidente: document.getElementById('incidente').value,
-        ubicacion_fisica: document.getElementById('ubicacionFisica').value || "No especificado",
-        anonimo: document.getElementById('anonimo').checked,
-        nombre: document.getElementById('nombreUsuario').value,
-        latitud: latitudGlobal,
-        longitud: longitudGlobal
-    };
-
-    // Petición HTTP POST al servidor local o en la nube
-    fetch('/enviar-alerta', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert("¡ALERTA ENVIADA EXITOSAMENTE!");
-        } else {
-            alert("Error del servidor: " + data.message);
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Hubo un fallo en la conexión de red al enviar la alerta.");
-    })
-    .finally(() => {
-        btnSos.disabled = false;
-        btnSos.innerText = "SOS";
+    // Guardar contactos en el navegador del usuario
+    saveButton.addEventListener('click', () => {
+        localStorage.setItem('contact1', document.getElementById('contact1').value);
+        localStorage.setItem('contact2', document.getElementById('contact2').value);
+        localStorage.setItem('contact3', document.getElementById('contact3').value);
+        
+        statusDiv.style.color = "green";
+        statusDiv.textContent = "Contactos guardados de forma segura.";
     });
-}
+
+    // Acción del Botón SOS
+    sosButton.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            statusDiv.style.color = "red";
+            statusDiv.textContent = "La geolocalización no es compatible con tu navegador.";
+            return;
+        }
+
+        statusDiv.style.color = "#6b1c37";
+        statusDiv.textContent = "Obteniendo ubicación exacta...";
+
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Enviar coordenadas a nuestro servidor en Render
+            fetch('/enviar-alerta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    latitud: lat,
+                    longitud: lon,
+                    contacto1: localStorage.getItem('contact1') || 'No asignado',
+                    contacto2: localStorage.getItem('contact2') || 'No asignado',
+                    contacto3: localStorage.getItem('contact3') || 'No asignado'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    statusDiv.style.color = "green";
+                    statusDiv.textContent = "¡Alerta enviada con éxito a las autoridades!";
+                } else {
+                    statusDiv.style.color = "red";
+                    statusDiv.textContent = "Error al enviar la alerta.";
+                }
+            })
+            .catch(error => {
+                statusDiv.style.color = "red";
+                statusDiv.textContent = "Error de conexión con el servidor.";
+                console.error(error);
+            });
+
+        }, () => {
+            statusDiv.style.color = "red";
+            statusDiv.textContent = "No se pudo acceder a tu ubicación. Por favor, activa el GPS.";
+        });
+    });
+});
