@@ -26,44 +26,25 @@
             box-sizing: border-box;
         }
         h1 {
-            color: #6b1c37; /* Guinda Institucional */
+            color: #6b1c37; /* Guinda */
             margin-bottom: 5px;
             font-size: 24px;
         }
         .subtitle {
             color: #7f8c8d; /* Gris */
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-        .btn-sos {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: #6b1c37; /* Guinda */
-            color: #ffffff;
-            font-size: 28px;
-            font-weight: bold;
-            border: 8px solid #e2d3d8;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(107, 28, 55, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
-            margin-bottom: 35px;
-        }
-        .btn-sos:active {
-            transform: scale(0.95);
-            background-color: #521429;
-        }
-        .config-section {
-            border-top: 2px dashed #dbdbdb;
-            padding-top: 20px;
+        label {
+            display: block;
             text-align: left;
-        }
-        .config-section h3 {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
             color: #4a4a4a;
-            margin-bottom: 15px;
-            font-size: 16px;
+            font-size: 14px;
         }
-        input[type="text"] {
+        select, input[type="text"] {
             width: 100%;
             padding: 12px;
             margin-bottom: 12px;
@@ -73,10 +54,35 @@
             font-size: 14px;
             background-color: #fafafa;
         }
+        .btn-sos {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background-color: #6b1c37; /* Guinda */
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: bold;
+            border: 8px solid #e2d3d8;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(107, 28, 55, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+            margin: 20px auto;
+            display: block;
+        }
+        .btn-sos:active {
+            transform: scale(0.95);
+            background-color: #521429;
+        }
+        .config-section {
+            border-top: 2px dashed #dbdbdb;
+            padding-top: 15px;
+            margin-top: 25px;
+            text-align: left;
+        }
         .btn-save {
             width: 100%;
             padding: 12px;
-            background-color: #7f8c8d; /* Gris Plata */
+            background-color: #7f8c8d; /* Gris */
             color: white;
             border: none;
             border-radius: 8px;
@@ -85,13 +91,11 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .btn-save:hover {
-            background-color: #6c7a7b;
-        }
         #status {
             margin-top: 15px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: bold;
+            min-height: 20px;
         }
     </style>
 </head>
@@ -101,19 +105,106 @@
         <h1>Sistema de Alerta SOS</h1>
         <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
 
+        <label for="incidente">Tipo de Incidente / Reporte:</label>
+        <select id="incidente">
+            <option value="Médico / Accidente">Emergencia Médica / Accidente</option>
+            <option value="Acoso / Bullying">Reporte de Acoso / Bullying</option>
+            <option value="Riña / Pelea">Riña o Pelea en el plantel</option>
+            <option value="Siniestro (Fuego/Sismo)">Siniestro (Fuego / Sismo)</option>
+            <option value="Prueba de Sistema">Solo una Prueba de Sistema</option>
+        </select>
+
+        <label for="detalles">Ubicación aproximada dentro del plantel:</label>
+        <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
+
         <button class="btn-sos" id="sosButton">SOS</button>
 
+        <div id="status"></div>
+
         <div class="config-section">
-            <h3>Configurar Contactos de Emergencia</h3>
+            <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia</h3>
             <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
             <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
             <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
             <button class="btn-save" id="saveContacts">Guardar Contactos</button>
         </div>
-
-        <div id="status"></div>
     </div>
 
-    <script src="/estático/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sosButton = document.getElementById('sosButton');
+            const saveButton = document.getElementById('saveContacts');
+            const statusDiv = document.getElementById('status');
+
+            // Recuperar contactos guardados
+            document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
+            document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
+            document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
+
+            // Guardar contactos y MOSTRAR TEXTO DE CONFIRMACIÓN
+            saveButton.addEventListener('click', () => {
+                localStorage.setItem('contact1', document.getElementById('contact1').value);
+                localStorage.setItem('contact2', document.getElementById('contact2').value);
+                localStorage.setItem('contact3', document.getElementById('contact3').value);
+                
+                statusDiv.style.color = "green";
+                statusDiv.textContent = "¡Contactos guardados exitosamente en el dispositivo!";
+                setTimeout(() => { statusDiv.textContent = ""; }, 4000);
+            });
+
+            // Acción del Botón SOS
+            sosButton.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    statusDiv.style.color = "red";
+                    statusDiv.textContent = "La geolocalización no es soportada por este celular.";
+                    return;
+                }
+
+                const tipoIncidente = document.getElementById('incidente').value;
+                const notasUbicacion = document.getElementById('detalles').value || "No especificada";
+
+                statusDiv.style.color = "#6b1c37";
+                statusDiv.textContent = "Ubicando señal GPS...";
+
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Enviar datos al backend en Render
+                    fetch('/enviar-alerta', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            latitud: lat,
+                            longitud: lon,
+                            incidente: tipoIncidente,
+                            detalles_ubicacion: notasUbicacion,
+                            contacto1: localStorage.getItem('contact1') || 'No asignado',
+                            contacto2: localStorage.getItem('contact2') || 'No asignado',
+                            contacto3: localStorage.getItem('contact3') || 'No asignado'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            statusDiv.style.color = "green";
+                            statusDiv.textContent = "¡Alerta enviada con éxito a Telegram!";
+                        } else {
+                            statusDiv.style.color = "red";
+                            statusDiv.textContent = "Error al despachar la alerta.";
+                        }
+                    })
+                    .catch(error => {
+                        statusDiv.style.color = "red";
+                        statusDiv.textContent = "Error de conexión con el servidor.";
+                    });
+
+                }, () => {
+                    statusDiv.style.color = "red";
+                    statusDiv.textContent = "Por favor, enciende tu GPS para enviar la alerta.";
+                });
+            });
+        });
+    </script>
 </body>
 </html>
