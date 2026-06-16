@@ -3,236 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botón de Pánico</title>
+    <title>Sistema de Alerta SOS - CBTis 204</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f4f6f9;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f6;
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
+            color: #333333;
         }
-
         .container {
-            width: 100%;
             max-width: 450px;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #d32f2f;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .gps-status {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border: 1px solid #ffeeba;
-        }
-
-        .gps-success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        select, input[type="text"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px; /* Evita zoom automático en iPhones */
-            background-color: #fafafa;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            box-sizing: border-box;
         }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .checkbox-group input {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* DISEÑO DEL BOTÓN SOS */
-        .btn-sos-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 25px 0;
-        }
-
-        .btn-sos {
-            width: 160px;
-            height: 160px;
-            background: radial-gradient(circle, #ff5252 0%, #c62828 100%);
-            color: white;
-            border: none;
-            border-radius: 50%;
+        h1 {
+            color: #6b1c37; /* Guinda Institucional */
+            margin-bottom: 5px;
             font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-            box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7);
-            animation: pulse 1.8s infinite;
-            cursor: pointer;
-            transition: transform 0.2s;
         }
-
+        .subtitle {
+            color: #7f8c8d; /* Gris */
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .btn-sos {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #6b1c37; /* Guinda */
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            border: 8px solid #e2d3d8;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(107, 28, 55, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+            margin-bottom: 35px;
+        }
         .btn-sos:active {
             transform: scale(0.95);
-            background: #b71c1c;
+            background-color: #521429;
         }
-
-        .btn-sos:disabled {
-            background: #9e9e9e;
-            animation: none;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.5); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 25px rgba(198, 40, 40, 0); }
-            100% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
-        }
-
-        /* SECCIÓN CONFIGURACIÓN OCULTA */
-        .config-toggle {
-            text-align: center;
-            color: #555;
-            font-size: 14px;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
         .config-section {
-            display: none; /* Oculto por defecto */
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px dashed #ccc;
+            border-top: 2px dashed #dbdbdb;
+            padding-top: 20px;
+            text-align: left;
         }
-
-        .config-section.active {
-            display: block;
+        .config-section h3 {
+            color: #4a4a4a;
+            margin-bottom: 15px;
+            font-size: 16px;
         }
-
-        .btn-guardar {
+        input[type="text"] {
             width: 100%;
-            padding: 10px;
-            background-color: #3f51b5;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #fafafa;
+        }
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background-color: #7f8c8d; /* Gris Plata */
             color: white;
             border: none;
             border-radius: 8px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-save:hover {
+            background-color: #6c7a7b;
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>SOS ESCUELA</h1>
-        
-        <div id="gpsStatus" class="gps-status"> Obteniendo localización obligatoria (GPS)...</div>
+        <h1>Sistema de Alerta SOS</h1>
+        <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
 
-        <div class="form-group">
-            <label for="incidente">¿Qué está ocurriendo?</label>
-            <select id="incidente">
-                <option value="Robo / Hurto">Robo / Hurto</option>
-                <option value="Pelea / Riña">Pelea / Riña Escolar</option>
-                <option value="Accidente / Emergencia Médica">Accidente / Emergencia Médica</option>
-                <option value="Acoso / Violencia">Acoso / Violencia Digital o Física</option>
-                <option value="Otro incidente">Otro</option>
-            </select>
+        <button class="btn-sos" id="sosButton">SOS</button>
+
+        <div class="config-section">
+            <h3>Configurar Contactos de Emergencia</h3>
+            <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
+            <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
+            <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
+            <button class="btn-save" id="saveContacts">Guardar Contactos</button>
         </div>
 
-        <div class="form-group">
-            <label for="ubicacionFisica">Salón / Edificio / Referencia:</label>
-            <input type="text" id="ubicacionFisica" placeholder="Ej: Edificio B, Salón 12">
-        </div>
-
-        <div class="form-group">
-            <div class="checkbox-group">
-                <input type="checkbox" id="anonimo" checked onchange="toggleNombreCampo()">
-                <label for="anonimo">Enviar como Reporte Anónimo</label>
-            </div>
-        </div>
-
-        <div class="form-group" id="grupoNombre" style="display: none;">
-            <label for="nombreUsuario">Tu Nombre (Opcional):</label>
-            <input type="text" id="nombreUsuario" placeholder="Escribe tu nombre">
-        </div>
-
-        <div class="btn-sos-container">
-            <button id="btnSos" class="btn-sos" disabled onclick="enviarAlertaServidor()">SOS</button>
-        </div>
-
-        <div class="config-toggle" onclick="toggleConfiguracion()">⚙️ Configurar Contactos de Emergencia</div>
-        
-        <div id="configSection" class="config-section">
-            <h3>Contactos de Emergencia</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Guardados de forma segura en tu navegador habitual.</p>
-            <div class="form-group">
-                <input type="text" id="contacto1" placeholder="Contacto 1 (Nombre o Teléfono)">
-            </div>
-            <div class="form-group">
-                <input type="text" id="contacto2" placeholder="Contacto 2 (Nombre o Teléfono)">
-            </div>
-            <div class="form-group">
-                <input type="text" id="contacto3" placeholder="Contacto 3 (Nombre o Teléfono)">
-            </div>
-            <button class="btn-guardar" onclick="guardarContactos()">Guardar Contactos</button>
-        </div>
+        <div id="status"></div>
     </div>
 
-    <script src="/static/js/app.js"></script>
-    <script>
-        // Funciones visuales rápidas integradas en el HTML
-        function toggleNombreCampo() {
-            const anonimoCheckbox = document.getElementById('anonimo');
-            const grupoNombre = document.getElementById('grupoNombre');
-            grupoNombre.style.display = anonimoCheckbox.checked ? 'none' : 'block';
-        }
-
-        function toggleConfiguracion() {
-            const configSection = document.getElementById('configSection');
-            configSection.classList.toggle('active');
-        }
-    </script>
+    <script src="/estático/js/app.js"></script>
 </body>
 </html>
