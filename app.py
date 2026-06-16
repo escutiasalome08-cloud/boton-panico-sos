@@ -6,8 +6,8 @@ app = Flask(__name__)
 # ========================================================
 # CONFIGURACIÓN DE TELEGRAM (REMPLAZA CON TUS DATOS)
 # ========================================================
-TELEGRAM_TOKEN = "TU_TELEGRAM_BOT_TOKEN_AQUI"
-TELEGRAM_CHAT_ID = "TU_CHAT_ID_DE_LOS_DIRECTIVOS_AQUI"
+TELEGRAM_TOKEN = "8854308504:AAEDa5MhMynOv8I6tkAkCYiWuHYjcFGRTfU"
+TELEGRAM_CHAT_ID = "6028715446"
 # ========================================================
 
 @app.route('/')
