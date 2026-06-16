@@ -54,24 +54,33 @@
             font-size: 14px;
             background-color: #fafafa;
         }
+        /* Contenedor del Botón SOS Especial */
+        .sos-wrapper {
+            margin: 30px auto;
+            position: relative;
+            width: 190px;
+            height: 190px;
+        }
         .btn-sos {
             width: 180px;
             height: 180px;
             border-radius: 50%;
             background-color: #6b1c37; /* Guinda */
             color: #ffffff;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             border: 8px solid #e2d3d8;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(107, 28, 55, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
-            margin: 20px auto;
-            display: block;
+            transition: background-color 0.3s, transform 0.1s;
+            user-select: none;
+            -webkit-user-select: none;
         }
-        .btn-sos:active {
-            transform: scale(0.95);
-            background-color: #521429;
+        /* Color cuando se está dejando presionado */
+        .btn-sos.holding {
+            background-color: #d32f2f; /* Rojo brillante de carga */
+            transform: scale(0.96);
+            border-color: #ffcdd2;
         }
         .config-section {
             border-top: 2px dashed #dbdbdb;
@@ -89,13 +98,19 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
         #status {
             margin-top: 15px;
             font-size: 14px;
             font-weight: bold;
             min-height: 20px;
+            color: #6b1c37;
+        }
+        .instruction-text {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: -10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -104,6 +119,9 @@
     <div class="container">
         <h1>Sistema de Alerta SOS</h1>
         <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
+
+        <label for="matricula">Matrícula Escolar / No. de Control:</label>
+        <input type="text" id="matricula" placeholder="Ingresa tu matrícula para activar la app">
 
         <label for="incidente">Tipo de Incidente / Reporte:</label>
         <select id="incidente">
@@ -117,16 +135,19 @@
         <label for="detalles">Ubicación aproximada dentro del plantel:</label>
         <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
 
-        <button class="btn-sos" id="sosButton">SOS</button>
+        <div class="sos-wrapper">
+            <button class="btn-sos" id="sosButton">SOS</button>
+        </div>
+        <div class="instruction-text">Mantén presionado por 3 segundos continuos</div>
 
         <div id="status"></div>
 
         <div class="config-section">
-            <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia</h3>
+            <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia (Opcional)</h3>
             <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
             <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
             <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
-            <button class="btn-save" id="saveContacts">Guardar Contactos</button>
+            <button class="btn-save" id="saveContacts">Guardar Configuración Completa</button>
         </div>
     </div>
 
@@ -136,24 +157,77 @@
             const saveButton = document.getElementById('saveContacts');
             const statusDiv = document.getElementById('status');
 
-            // Recuperar contactos guardados
+            // Recuperar datos guardados del almacenamiento del cel
+            document.getElementById('matricula').value = localStorage.getItem('userMatricula') || '';
             document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
             document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
             document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
 
-            // Guardar contactos y MOSTRAR TEXTO DE CONFIRMACIÓN
+            // Guardar configuración completa en el navegador
             saveButton.addEventListener('click', () => {
+                const matValue = document.getElementById('matricula').value.trim();
+                if(!matValue) {
+                    statusDiv.style.color = "red";
+                    statusDiv.textContent = "Por favor, ingresa tu matrícula para guardar.";
+                    return;
+                }
+                localStorage.setItem('userMatricula', matValue);
                 localStorage.setItem('contact1', document.getElementById('contact1').value);
                 localStorage.setItem('contact2', document.getElementById('contact2').value);
                 localStorage.setItem('contact3', document.getElementById('contact3').value);
                 
                 statusDiv.style.color = "green";
-                statusDiv.textContent = "¡Contactos guardados exitosamente en el dispositivo!";
+                statusDiv.textContent = "¡Datos y Matrícula guardados exitosamente!";
                 setTimeout(() => { statusDiv.textContent = ""; }, 4000);
             });
 
-            // Acción del Botón SOS
-            sosButton.addEventListener('click', () => {
+            // LÓGICA DE LOS 3 SEGUNDOS DE PRESIÓN
+            let holdTimer;
+            const holdDuration = 3000; // 3 segundos en milisegundos
+
+            function startHold(e) {
+                e.preventDefault();
+                const matriculaActual = document.getElementById('matricula').value.trim();
+                
+                // Si no hay matrícula, no dejamos hacer nada
+                if (!matriculaActual) {
+                    statusDiv.style.color = "red";
+                    statusDiv.textContent = "¡ERROR: Debes registrar tu matrícula antes de usar el SOS!";
+                    return;
+                }
+
+                sosButton.classList.add('holding');
+                statusDiv.style.color = "#6b1c37";
+                statusDiv.textContent = "Sostén presionado... (3s)";
+
+                holdTimer = setTimeout(() => {
+                    triggerSOS(matriculaActual);
+                }, holdDuration);
+            }
+
+            function cancelHold() {
+                if (holdTimer) {
+                    clearTimeout(holdTimer);
+                    sosButton.classList.remove('holding');
+                    if (!statusDiv.textContent.includes("éxito") && !statusDiv.textContent.includes("ERROR")) {
+                        statusDiv.style.color = "orange";
+                        statusDiv.textContent = "Envío cancelado. Debes mantenerlo por 3 segundos.";
+                    }
+                }
+            }
+
+            // Detectar cuando presionan en computadoras y pantallas táctiles de cel
+            sosButton.addEventListener('mousedown', startHold);
+            sosButton.addEventListener('mouseup', cancelHold);
+            sosButton.addEventListener('mouseleave', cancelHold);
+
+            sosButton.addEventListener('touchstart', startHold);
+            sosButton.addEventListener('touchend', cancelHold);
+
+            // FUNCIÓN QUE DISPARA LA ALERTA REAL
+            function triggerSOS(matricula) {
+                sosButton.classList.remove('holding');
+                
                 if (!navigator.geolocation) {
                     statusDiv.style.color = "red";
                     statusDiv.textContent = "La geolocalización no es soportada por este celular.";
@@ -163,14 +237,14 @@
                 const tipoIncidente = document.getElementById('incidente').value;
                 const notasUbicacion = document.getElementById('detalles').value || "No especificada";
 
-                statusDiv.style.color = "#6b1c37";
-                statusDiv.textContent = "Ubicando señal GPS...";
+                statusDiv.style.color = "red";
+                statusDiv.textContent = "¡Tiempo cumplido! Enviando alerta general...";
 
                 navigator.geolocation.getCurrentPosition(position => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
 
-                    // Enviar datos al backend en Render
+                    // Enviar todos los datos juntos a Render y luego a Telegram
                     fetch('/enviar-alerta', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -179,6 +253,7 @@
                             longitud: lon,
                             incidente: tipoIncidente,
                             detalles_ubicacion: notasUbicacion,
+                            matricula: matricula,
                             contacto1: localStorage.getItem('contact1') || 'No asignado',
                             contacto2: localStorage.getItem('contact2') || 'No asignado',
                             contacto3: localStorage.getItem('contact3') || 'No asignado'
@@ -188,7 +263,7 @@
                     .then(data => {
                         if (data.status === 'success') {
                             statusDiv.style.color = "green";
-                            statusDiv.textContent = "¡Alerta enviada con éxito a Telegram!";
+                            statusDiv.textContent = "¡Alerta SOS enviada con éxito!";
                         } else {
                             statusDiv.style.color = "red";
                             statusDiv.textContent = "Error al despachar la alerta.";
@@ -201,9 +276,9 @@
 
                 }, () => {
                     statusDiv.style.color = "red";
-                    statusDiv.textContent = "Por favor, enciende tu GPS para enviar la alerta.";
+                    statusDiv.textContent = "Enciende tu GPS para poder procesar el SOS.";
                 });
-            });
+            }
         });
     </script>
 </body>
