@@ -14,7 +14,7 @@ function solicitarGPS() {
     const btnSos = document.getElementById('btnSos');
 
     if (!navigator.geolocation) {
-        statusDiv.innerText = "❌ Tu navegador no soporta geolocalización. App bloqueada.";
+        statusDiv.innerText = "Tu navegador no soporta geolocalización. App bloqueada.";
         statusDiv.style.backgroundColor = "#f8d7da";
         statusDiv.style.color = "#721c24";
         return;
@@ -27,13 +27,13 @@ function solicitarGPS() {
             longitudGlobal = position.coords.longitude;
 
             // Si se consiguen con éxito, actualizamos la interfaz y habilitamos el botón
-            statusDiv.innerText = "✅ GPS Conectado de forma segura y obligatoria";
+            statusDiv.innerText = "GPS Conectado de forma segura y obligatoria";
             statusDiv.className = "gps-status gps-success";
             btnSos.disabled = false;
         },
         (error) => {
             console.error(error);
-            statusDiv.innerText = "❌ Acceso a GPS denegado. Es obligatorio activarlo para reportar.";
+            statusDiv.innerText = "Acceso a GPS denegado. Es obligatorio activarlo para reportar.";
             statusDiv.style.backgroundColor = "#f8d7da";
             statusDiv.style.color = "#721c24";
             btnSos.disabled = true; // El botón permanece bloqueado si no hay GPS
