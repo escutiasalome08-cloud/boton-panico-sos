@@ -98,7 +98,7 @@ function enviarAlertaServidor() {
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
-            alert("🚨 ¡ALERTA ENVIADA EXITOSAMENTE! Los directivos han recibido tu ubicación.");
+            alert("¡ALERTA ENVIADA EXITOSAMENTE!");
         } else {
             alert("Error del servidor: " + data.message);
         }
