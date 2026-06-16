@@ -44,7 +44,7 @@
             color: #4a4a4a;
             font-size: 14px;
         }
-        select, input[type="text"] {
+        select, input[type="text"], input[type="number"] {
             width: 100%;
             padding: 12px;
             margin-bottom: 12px;
@@ -54,7 +54,17 @@
             font-size: 14px;
             background-color: #fafafa;
         }
-        /* Contenedor del Botón SOS Especial */
+        
+        /* PANTALLA DE LOGUEO/REGISTRO */
+        #loginScreen {
+            display: block; /* Se muestra al principio */
+        }
+
+        /* PANTALLA PRINCIPAL DE LA APP */
+        #appScreen {
+            display: none; /* Escondida hasta que pongan la matrícula */
+        }
+
         .sos-wrapper {
             margin: 30px auto;
             position: relative;
@@ -76,9 +86,8 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        /* Color cuando se está dejando presionado */
         .btn-sos.holding {
-            background-color: #d32f2f; /* Rojo brillante de carga */
+            background-color: #d32f2f; 
             transform: scale(0.96);
             border-color: #ffcdd2;
         }
@@ -87,6 +96,18 @@
             padding-top: 15px;
             margin-top: 25px;
             text-align: left;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #6b1c37; /* Guinda */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
         }
         .btn-save {
             width: 100%;
@@ -104,7 +125,6 @@
             font-size: 14px;
             font-weight: bold;
             min-height: 20px;
-            color: #6b1c37;
         }
         .instruction-text {
             font-size: 12px;
@@ -120,88 +140,124 @@
         <h1>Sistema de Alerta SOS</h1>
         <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
 
-        <label for="matricula">Matrícula Escolar / No. de Control:</label>
-        <input type="text" id="matricula" placeholder="Ingresa tu matrícula para activar la app">
-
-        <label for="incidente">Tipo de Incidente / Reporte:</label>
-        <select id="incidente">
-            <option value="Médico / Accidente">Emergencia Médica / Accidente</option>
-            <option value="Acoso / Bullying">Reporte de Acoso / Bullying</option>
-            <option value="Riña / Pelea">Riña o Pelea en el plantel</option>
-            <option value="Siniestro (Fuego/Sismo)">Siniestro (Fuego / Sismo)</option>
-            <option value="Prueba de Sistema">Solo una Prueba de Sistema</option>
-        </select>
-
-        <label for="detalles">Ubicación aproximada dentro del plantel:</label>
-        <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
-
-        <div class="sos-wrapper">
-            <button class="btn-sos" id="sosButton">SOS</button>
+        <div id="loginScreen">
+            <h2 style="font-size: 18px; color: #4a4a4a; margin-top: 20px;">Registro de Acceso Estudiantil</h2>
+            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">Para garantizar el uso responsable del sistema, ingresa tus datos institucionales.</p>
+            
+            <label for="loginMatricula">No. de Control:</label>
+            <input type="number" id="loginMatricula" placeholder="Ej: 2231405204XXXX" required>
+            
+            <button class="btn-primary" id="btnLogin">Ingresar al Sistema</button>
+            <div id="loginError" style="color: red; font-size: 13px; margin-top: 10px; font-weight: bold;"></div>
         </div>
-        <div class="instruction-text">Mantén presionado por 3 segundos continuos</div>
 
-        <div id="status"></div>
+        <div id="appScreen">
+            <p style="font-size: 13px; color: #27ae60; font-weight: bold; text-align: left; margin-bottom: 15px;" id="welcomeMessage"></p>
 
-        <div class="config-section">
-            <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia (Opcional)</h3>
-            <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
-            <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
-            <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
-            <button class="btn-save" id="saveContacts">Guardar Configuración Completa</button>
+            <label for="incidente">Tipo de Incidente / Reporte:</label>
+            <select id="incidente">
+                <option value="Médico / Accidente">Emergencia Médica / Accidente</option>
+                <option value="Acoso / Bullying">Reporte de Acoso / Bullying</option>
+                <option value="Riña / Pelea">Riña o Pelea en el plantel</option>
+                <option value="Siniestro (Fuego/Sismo)">Siniestro (Fuego / Sismo)</option>
+                <option value="Prueba de Sistema">Solo una Prueba de Sistema</option>
+            </select>
+
+            <label for="detalles">Ubicación aproximada dentro del plantel:</label>
+            <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
+
+            <div class="sos-wrapper">
+                <button class="btn-sos" id="sosButton">SOS</button>
+            </div>
+            <div class="instruction-text">Mantén presionado por 3 segundos continuos</div>
+
+            <div id="status"></div>
+
+            <div class="config-section">
+                <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia (Opcional)</h3>
+                <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
+                <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
+                <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
+                <button class="btn-save" id="saveContacts">Guardar Contactos</button>
+                <button class="btn-save" id="btnCerrarSesion" style="background-color: #c0392b; margin-top: 10px;">Cerrar Sesión (Borrar Matrícula)</button>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const loginScreen = document.getElementById('loginScreen');
+            const appScreen = document.getElementById('appScreen');
+            const btnLogin = document.getElementById('btnLogin');
+            const loginMatricula = document.getElementById('loginMatricula');
+            const loginError = document.getElementById('loginError');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
             const sosButton = document.getElementById('sosButton');
             const saveButton = document.getElementById('saveContacts');
+            const btnCerrarSesion = document.getElementById('btnCerrarSesion');
             const statusDiv = document.getElementById('status');
 
-            // Recuperar datos guardados del almacenamiento del cel
-            document.getElementById('matricula').value = localStorage.getItem('userMatricula') || '';
-            document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
-            document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
-            document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
+            // VERIFICAR SI YA INICIÓ SESIÓN ANTES
+            const savedMatricula = localStorage.getItem('userMatricula');
+            if (savedMatricula) {
+                mostrarApp(savedMatricula);
+            }
 
-            // Guardar configuración completa en el navegador
-            saveButton.addEventListener('click', () => {
-                const matValue = document.getElementById('matricula').value.trim();
-                if(!matValue) {
-                    statusDiv.style.color = "red";
-                    statusDiv.textContent = "Por favor, ingresa tu matrícula para guardar.";
+            // FUNCIÓN PARA ENTRAR A LA APP
+            function mostrarApp(matricula) {
+                loginScreen.style.display = "none";
+                appScreen.style.display = "block";
+                welcomeMessage.textContent = "Sesión Activa: Matrícula " + matricula;
+                
+                // Cargar contactos guardados
+                document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
+                document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
+                document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
+            }
+
+            // EVENTO CLICK DEL BOTÓN INGRESO
+            btnLogin.addEventListener('click', () => {
+                const mat = loginMatricula.value.trim();
+                if (mat.length < 5) { // Validación simple de que no esté vacío o muy corto
+                    loginError.textContent = "Por favor, ingresa una matrícula válida.";
                     return;
                 }
-                localStorage.setItem('userMatricula', matValue);
+                // Guardar matrícula en la memoria del celular
+                localStorage.setItem('userMatricula', mat);
+                loginError.textContent = "";
+                mostrarApp(mat);
+            });
+
+            // GUARDAR CONTACTOS
+            saveButton.addEventListener('click', () => {
                 localStorage.setItem('contact1', document.getElementById('contact1').value);
                 localStorage.setItem('contact2', document.getElementById('contact2').value);
                 localStorage.setItem('contact3', document.getElementById('contact3').value);
                 
                 statusDiv.style.color = "green";
-                statusDiv.textContent = "¡Datos y Matrícula guardados exitosamente!";
+                statusDiv.textContent = "¡Contactos actualizados con éxito!";
                 setTimeout(() => { statusDiv.textContent = ""; }, 4000);
+            });
+
+            // BOTÓN PARA CERRAR SESIÓN (Por si quieren cambiar de usuario)
+            btnCerrarSesion.addEventListener('click', () => {
+                localStorage.clear();
+                location.reload(); // Recarga la página y vuelve a bloquear
             });
 
             // LÓGICA DE LOS 3 SEGUNDOS DE PRESIÓN
             let holdTimer;
-            const holdDuration = 3000; // 3 segundos en milisegundos
+            const holdDuration = 3000;
 
             function startHold(e) {
                 e.preventDefault();
-                const matriculaActual = document.getElementById('matricula').value.trim();
-                
-                // Si no hay matrícula, no dejamos hacer nada
-                if (!matriculaActual) {
-                    statusDiv.style.color = "red";
-                    statusDiv.textContent = "¡ERROR: Debes registrar tu matrícula antes de usar el SOS!";
-                    return;
-                }
-
                 sosButton.classList.add('holding');
                 statusDiv.style.color = "#6b1c37";
                 statusDiv.textContent = "Sostén presionado... (3s)";
 
                 holdTimer = setTimeout(() => {
-                    triggerSOS(matriculaActual);
+                    triggerSOS();
                 }, holdDuration);
             }
 
@@ -209,51 +265,42 @@
                 if (holdTimer) {
                     clearTimeout(holdTimer);
                     sosButton.classList.remove('holding');
-                    if (!statusDiv.textContent.includes("éxito") && !statusDiv.textContent.includes("ERROR")) {
+                    if (!statusDiv.textContent.includes("éxito") && !statusDiv.textContent.includes("Error")) {
                         statusDiv.style.color = "orange";
-                        statusDiv.textContent = "Envío cancelado. Debes mantenerlo por 3 segundos.";
+                        statusDiv.textContent = "Envío cancelado. Mantén por 3 segundos.";
                     }
                 }
             }
 
-            // Detectar cuando presionan en computadoras y pantallas táctiles de cel
             sosButton.addEventListener('mousedown', startHold);
             sosButton.addEventListener('mouseup', cancelHold);
             sosButton.addEventListener('mouseleave', cancelHold);
-
             sosButton.addEventListener('touchstart', startHold);
             sosButton.addEventListener('touchend', cancelHold);
 
-            // FUNCIÓN QUE DISPARA LA ALERTA REAL
-            function triggerSOS(matricula) {
+            // ENVIAR ALERTA REAL
+            function triggerSOS() {
                 sosButton.classList.remove('holding');
                 
                 if (!navigator.geolocation) {
                     statusDiv.style.color = "red";
-                    statusDiv.textContent = "La geolocalización no es soportada por este celular.";
+                    statusDiv.textContent = "Geolocalización no soportada.";
                     return;
                 }
 
-                const tipoIncidente = document.getElementById('incidente').value;
-                const notasUbicacion = document.getElementById('detalles').value || "No especificada";
-
                 statusDiv.style.color = "red";
-                statusDiv.textContent = "¡Tiempo cumplido! Enviando alerta general...";
+                statusDiv.textContent = "¡Tiempo cumplido! Despachando SOS...";
 
                 navigator.geolocation.getCurrentPosition(position => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-
-                    // Enviar todos los datos juntos a Render y luego a Telegram
                     fetch('/enviar-alerta', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            latitud: lat,
-                            longitud: lon,
-                            incidente: tipoIncidente,
-                            detalles_ubicacion: notasUbicacion,
-                            matricula: matricula,
+                            latitud: position.coords.latitude,
+                            longitud: position.coords.longitude,
+                            incidente: document.getElementById('incidente').value,
+                            detalles_ubicacion: document.getElementById('detalles').value || "No especificada",
+                            matricula: localStorage.getItem('userMatricula'),
                             contacto1: localStorage.getItem('contact1') || 'No asignado',
                             contacto2: localStorage.getItem('contact2') || 'No asignado',
                             contacto3: localStorage.getItem('contact3') || 'No asignado'
@@ -266,17 +313,16 @@
                             statusDiv.textContent = "¡Alerta SOS enviada con éxito!";
                         } else {
                             statusDiv.style.color = "red";
-                            statusDiv.textContent = "Error al despachar la alerta.";
+                            statusDiv.textContent = "Error al enviar.";
                         }
                     })
-                    .catch(error => {
+                    .catch(() => {
                         statusDiv.style.color = "red";
-                        statusDiv.textContent = "Error de conexión con el servidor.";
+                        statusDiv.textContent = "Error de red.";
                     });
-
                 }, () => {
                     statusDiv.style.color = "red";
-                    statusDiv.textContent = "Enciende tu GPS para poder procesar el SOS.";
+                    statusDiv.textContent = "Activa tu GPS para enviar el SOS.";
                 });
             }
         });
