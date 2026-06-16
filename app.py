@@ -36,12 +36,12 @@ def enviar_alerta():
         
         # Redactamos el mensaje que llegará a Telegram
         mensaje_telegram = (
-            "⚠️ 🚨 *¡ALERTA SOS ESCOLAR!* 🚨 ⚠️\n\n"
+            "*¡ALERTA SOS ESCOLAR!*\n\n"
             f"🔹 *Tipo de Incidente:* {incidente}\n"
             f"🔹 *Ubicación/Salón:* {ubicacion_fisica}\n"
             f"🔹 *Reportado por:* {identidad}\n\n"
-            f"📍 *Ubicación GPS exacta:* [Ver en Google Maps]({mapa_url})\n"
-            f"📌 *Coordenadas:* {latitud}, {longitud}"
+            f" *Ubicación GPS exacta:* [Ver en Google Maps]({mapa_url})\n"
+            f" *Coordenadas:* {latitud}, {longitud}"
         )
         
         # Enviamos el mensaje a la API de Telegram
