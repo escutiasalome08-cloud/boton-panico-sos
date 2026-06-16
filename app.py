@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # ========================================================
-# CONFIGURACIÓN DE TELEGRAM (REMPLAZA CON TUS DATOS)
+# CONFIGURACIÓN DE TELEGRAM
 # ========================================================
 TELEGRAM_TOKEN = "8854308504:AAEDa5MhMynOv8I6tkAkCYiWuHYjcFGRTfU"
 TELEGRAM_CHAT_ID = "6028715446"
@@ -12,7 +12,6 @@ TELEGRAM_CHAT_ID = "6028715446"
 
 @app.route('/')
 def home():
-    # Esta ruta muestra la página web principal
     return render_template('index.html')
 
 @app.route('/enviar-alerta', methods=['POST'])
@@ -20,31 +19,33 @@ def enviar_alerta():
     try:
         data = request.json
         
-        # Extraemos los datos enviados desde el JavaScript
-        incidente = data.get('incidente')
-        ubicacion_fisica = data.get('ubicacion_fisica')
-        anonimo = data.get('anonimo')
-        nombre_usuario = data.get('nombre', 'Anónimo')
+        incidente = data.get('incidente', 'No especificado')
+        ubicacion_fisica = data.get('detalles_ubicacion', 'No especificada')
+        matricula = data.get('matricula', 'No registrada')
+        
+        contacto1 = data.get('contacto1', 'No asignado')
+        contacto2 = data.get('contacto2', 'No asignado')
+        contacto3 = data.get('contacto3', 'No asignado')
+        
         latitud = data.get('latitud')
         longitud = data.get('longitud')
         
-        # Formateamos el reporte de identidad
-        identidad = "Anónimo" if anonimo else nombre_usuario
-        
-        # Creamos el enlace de Google Maps con las coordenadas del GPS
         mapa_url = f"https://www.google.com/maps?q={latitud},{longitud}"
         
-        # Redactamos el mensaje que llegará a Telegram
+        # MENSAJE FORMATEADO CORREGIDO: SIN EMOJIS
         mensaje_telegram = (
-            "*¡ALERTA SOS ESCOLAR!*\n\n"
-            f"🔹 *Tipo de Incidente:* {incidente}\n"
-            f"🔹 *Ubicación/Salón:* {ubicacion_fisica}\n"
-            f"🔹 *Reportado por:* {identidad}\n\n"
-            f" *Ubicación GPS exacta:* [Ver en Google Maps]({mapa_url})\n"
-            f" *Coordenadas:* {latitud}, {longitud}"
+            "*ALERTA SOS ESCOLAR*\n\n"
+            f"Tipo de Incidente: {incidente}\n"
+            f"Ubicacion interna: {ubicacion_fisica}\n"
+            f"Reportado por (Matricula): `{matricula}`\n\n"
+            "Contactos de Emergencia del Alumno:\n"
+            f"Tel 1: {contacto1}\n"
+            f"Tel 2: {contacto2}\n"
+            f"Tel 3: {contacto3}\n\n"
+            f"Ubicacion GPS exacta: [Ver en Google Maps]({mapa_url})\n"
+            f"Coordenadas: `{latitud}, {longitud}`"
         )
         
-        # Enviamos el mensaje a la API de Telegram
         url_api = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
         payload = {
             "chat_id": TELEGRAM_CHAT_ID,
