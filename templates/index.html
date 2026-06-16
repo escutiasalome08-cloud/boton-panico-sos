@@ -9,12 +9,45 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
             color: #333333;
         }
+
+        /* 1. AGREGADO: NAVBAR SUPERIOR EXIGIDO POR RÚBRICA */
+        .navbar {
+            width: 100%;
+            background-color: #6b1c37; /* Guinda */
+            padding: 15px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .navbar-menu {
+            font-size: 14px;
+            color: #e2d3d8;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         .container {
             max-width: 450px;
             width: 100%;
@@ -26,12 +59,12 @@
             box-sizing: border-box;
         }
         h1 {
-            color: #6b1c37; /* Guinda */
+            color: #6b1c37;
             margin-bottom: 5px;
             font-size: 24px;
         }
         .subtitle {
-            color: #7f8c8d; /* Gris */
+            color: #7f8c8d;
             font-size: 14px;
             margin-bottom: 25px;
         }
@@ -55,14 +88,12 @@
             background-color: #fafafa;
         }
         
-        /* PANTALLA DE LOGUEO/REGISTRO */
         #loginScreen {
-            display: block; /* Se muestra al principio */
+            display: block;
         }
 
-        /* PANTALLA PRINCIPAL DE LA APP */
         #appScreen {
-            display: none; /* Escondida hasta que pongan la matrícula */
+            display: none;
         }
 
         .sos-wrapper {
@@ -75,7 +106,7 @@
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            background-color: #6b1c37; /* Guinda */
+            background-color: #6b1c37;
             color: #ffffff;
             font-size: 24px;
             font-weight: bold;
@@ -100,7 +131,7 @@
         .btn-primary {
             width: 100%;
             padding: 12px;
-            background-color: #6b1c37; /* Guinda */
+            background-color: #6b1c37;
             color: white;
             border: none;
             border-radius: 8px;
@@ -112,7 +143,7 @@
         .btn-save {
             width: 100%;
             padding: 12px;
-            background-color: #7f8c8d; /* Gris */
+            background-color: #7f8c8d;
             color: white;
             border: none;
             border-radius: 8px;
@@ -132,56 +163,79 @@
             margin-top: -10px;
             margin-bottom: 10px;
         }
+
+        /* 2. AGREGADO: FOOTER EXIGIDO POR RÚBRICA */
+        .footer {
+            width: 100%;
+            background-color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #7f8c8d;
+            border-top: 1px solid #dbdbdb;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Sistema de Alerta SOS</h1>
-        <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
+    <div class="navbar">
+        <div class="navbar-brand">CBTis 204 - Seguridad</div>
+        <div class="navbar-menu">Inicio</div>
+    </div>
 
-        <div id="loginScreen">
-            <h2 style="font-size: 18px; color: #4a4a4a; margin-top: 20px;">Registro de Acceso Estudiantil</h2>
-            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">Para garantizar el uso responsable del sistema, ingresa tus datos institucionales.</p>
-            
-            <label for="loginMatricula">No. de Control:</label>
-            <input type="number" id="loginMatricula" placeholder="Ej: 2231405204XXXX" required>
-            
-            <button class="btn-primary" id="btnLogin">Ingresar al Sistema</button>
-            <div id="loginError" style="color: red; font-size: 13px; margin-top: 10px; font-weight: bold;"></div>
-        </div>
+    <div class="main-content">
+        <div class="container">
+            <h1>Sistema de Alerta SOS</h1>
+            <div class="subtitle">Plataforma de Seguridad Escolar Confidencial</div>
 
-        <div id="appScreen">
-            <p style="font-size: 13px; color: #27ae60; font-weight: bold; text-align: left; margin-bottom: 15px;" id="welcomeMessage"></p>
-
-            <label for="incidente">Tipo de Incidente / Reporte:</label>
-            <select id="incidente">
-                <option value="Médico / Accidente">Emergencia Médica / Accidente</option>
-                <option value="Acoso / Bullying">Reporte de Acoso / Bullying</option>
-                <option value="Riña / Pelea">Riña o Pelea en el plantel</option>
-                <option value="Siniestro (Fuego/Sismo)">Siniestro (Fuego / Sismo)</option>
-                <option value="Prueba de Sistema">Solo una Prueba de Sistema</option>
-            </select>
-
-            <label for="detalles">Ubicación aproximada dentro del plantel:</label>
-            <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
-
-            <div class="sos-wrapper">
-                <button class="btn-sos" id="sosButton">SOS</button>
+            <div id="loginScreen">
+                <h2 style="font-size: 18px; color: #4a4a4a; margin-top: 20px;">Registro de Acceso Estudiantil</h2>
+                <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 20px;">Ingresa tus datos para activar el boton de emergencia.</p>
+                
+                <label for="loginMatricula">Matricula Escolar / No. de Control:</label>
+                <input type="number" id="loginMatricula" placeholder="Ej: 2231405204XXXX" required>
+                
+                <button class="btn-primary" id="btnLogin">Ingresar al Sistema</button>
+                <div id="loginError" style="color: red; font-size: 13px; margin-top: 10px; font-weight: bold;"></div>
             </div>
-            <div class="instruction-text">Mantén presionado por 3 segundos continuos</div>
 
-            <div id="status"></div>
+            <div id="appScreen">
+                <p style="font-size: 13px; color: #27ae60; font-weight: bold; text-align: left; margin-bottom: 15px;" id="welcomeMessage"></p>
 
-            <div class="config-section">
-                <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia (Opcional)</h3>
-                <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Teléfono)">
-                <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Teléfono)">
-                <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Teléfono)">
-                <button class="btn-save" id="saveContacts">Guardar Contactos</button>
-                <button class="btn-save" id="btnCerrarSesion" style="background-color: #c0392b; margin-top: 10px;">Cerrar Sesión (Borrar Matrícula)</button>
+                <label for="incidente">Tipo de Incidente / Reporte:</label>
+                <select id="incidente">
+                    <option value="Medico / Accidente">Emergencia Medica / Accidente</option>
+                    <option value="Acoso / Bullying">Reporte de Acoso / Bullying</option>
+                    <option value="Rina / Pelea">Rina o Pelea en el plantel</option>
+                    <option value="Siniestro (Fuego/Sismo)">Siniestro (Fuego / Sismo)</option>
+                    <option value="Prueba de Sistema">Solo una Prueba de Sistema</option>
+                </select>
+
+                <label for="detalles">Ubicacion aproximada dentro del plantel:</label>
+                <input type="text" id="detalles" placeholder="Ej: Edificio B, Aula 4, Canchas...">
+
+                <div class="sos-wrapper">
+                    <button class="btn-sos" id="sosButton">SOS</button>
+                </div>
+                <div class="instruction-text">Manten presionado por 3 segundos continuos</div>
+
+                <div id="status"></div>
+
+                <div class="config-section">
+                    <h3 style="color: #4a4a4a; margin-bottom: 10px; font-size: 15px;">Contactos de Emergencia (Opcional)</h3>
+                    <input type="text" id="contact1" placeholder="Contacto 1 (Nombre o Telefono)">
+                    <input type="text" id="contact2" placeholder="Contacto 2 (Nombre o Telefono)">
+                    <input type="text" id="contact3" placeholder="Contacto 3 (Nombre o Telefono)">
+                    <button class="btn-save" id="saveContacts">Guardar Contactos</button>
+                    <button class="btn-save" id="btnCerrarSesion" style="background-color: #c0392b; margin-top: 10px;">Cerrar Sesion</button>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="footer">
+        Desarrollado por Fabiola Bolanos Tapia y Salome Escutia Eusebio &copy; 2026 | CBTis 204
     </div>
 
     <script>
@@ -198,55 +252,47 @@
             const btnCerrarSesion = document.getElementById('btnCerrarSesion');
             const statusDiv = document.getElementById('status');
 
-            // VERIFICAR SI YA INICIÓ SESIÓN ANTES
             const savedMatricula = localStorage.getItem('userMatricula');
             if (savedMatricula) {
                 mostrarApp(savedMatricula);
             }
 
-            // FUNCIÓN PARA ENTRAR A LA APP
             function mostrarApp(matricula) {
                 loginScreen.style.display = "none";
                 appScreen.style.display = "block";
-                welcomeMessage.textContent = "Sesión Activa: Matrícula " + matricula;
+                welcomeMessage.textContent = "Sesion Activa: Matricula " + matricula;
                 
-                // Cargar contactos guardados
                 document.getElementById('contact1').value = localStorage.getItem('contact1') || '';
                 document.getElementById('contact2').value = localStorage.getItem('contact2') || '';
                 document.getElementById('contact3').value = localStorage.getItem('contact3') || '';
             }
 
-            // EVENTO CLICK DEL BOTÓN INGRESO
             btnLogin.addEventListener('click', () => {
                 const mat = loginMatricula.value.trim();
-                if (mat.length < 5) { // Validación simple de que no esté vacío o muy corto
-                    loginError.textContent = "Por favor, ingresa una matrícula válida.";
+                if (mat.length < 5) {
+                    loginError.textContent = "Por favor, ingresa una matricula valida.";
                     return;
                 }
-                // Guardar matrícula en la memoria del celular
                 localStorage.setItem('userMatricula', mat);
                 loginError.textContent = "";
                 mostrarApp(mat);
             });
 
-            // GUARDAR CONTACTOS
             saveButton.addEventListener('click', () => {
                 localStorage.setItem('contact1', document.getElementById('contact1').value);
                 localStorage.setItem('contact2', document.getElementById('contact2').value);
                 localStorage.setItem('contact3', document.getElementById('contact3').value);
                 
                 statusDiv.style.color = "green";
-                statusDiv.textContent = "¡Contactos actualizados con éxito!";
+                statusDiv.textContent = "Contactos actualizados con exito.";
                 setTimeout(() => { statusDiv.textContent = ""; }, 4000);
             });
 
-            // BOTÓN PARA CERRAR SESIÓN (Por si quieren cambiar de usuario)
             btnCerrarSesion.addEventListener('click', () => {
                 localStorage.clear();
-                location.reload(); // Recarga la página y vuelve a bloquear
+                location.reload();
             });
 
-            // LÓGICA DE LOS 3 SEGUNDOS DE PRESIÓN
             let holdTimer;
             const holdDuration = 3000;
 
@@ -254,7 +300,7 @@
                 e.preventDefault();
                 sosButton.classList.add('holding');
                 statusDiv.style.color = "#6b1c37";
-                statusDiv.textContent = "Sostén presionado... (3s)";
+                statusDiv.textContent = "Sosten presionado... (3s)";
 
                 holdTimer = setTimeout(() => {
                     triggerSOS();
@@ -265,9 +311,9 @@
                 if (holdTimer) {
                     clearTimeout(holdTimer);
                     sosButton.classList.remove('holding');
-                    if (!statusDiv.textContent.includes("éxito") && !statusDiv.textContent.includes("Error")) {
+                    if (!statusDiv.textContent.includes("exito") && !statusDiv.textContent.includes("Error")) {
                         statusDiv.style.color = "orange";
-                        statusDiv.textContent = "Envío cancelado. Mantén por 3 segundos.";
+                        statusDiv.textContent = "Envio cancelado. Sosten por 3 segundos.";
                     }
                 }
             }
@@ -278,18 +324,17 @@
             sosButton.addEventListener('touchstart', startHold);
             sosButton.addEventListener('touchend', cancelHold);
 
-            // ENVIAR ALERTA REAL
             function triggerSOS() {
                 sosButton.classList.remove('holding');
                 
                 if (!navigator.geolocation) {
                     statusDiv.style.color = "red";
-                    statusDiv.textContent = "Geolocalización no soportada.";
+                    statusDiv.textContent = "Geolocalizacion no soportada.";
                     return;
                 }
 
                 statusDiv.style.color = "red";
-                statusDiv.textContent = "¡Tiempo cumplido! Despachando SOS...";
+                statusDiv.textContent = "Tiempo cumplido. Despachando SOS...";
 
                 navigator.geolocation.getCurrentPosition(position => {
                     fetch('/enviar-alerta', {
@@ -310,15 +355,15 @@
                     .then(data => {
                         if (data.status === 'success') {
                             statusDiv.style.color = "green";
-                            statusDiv.textContent = "¡Alerta SOS enviada con éxito!";
+                            statusDiv.textContent = "Alerta SOS enviada con exito.";
                         } else {
                             statusDiv.style.color = "red";
-                            statusDiv.textContent = "Error al enviar.";
+                            statusDiv.textContent = "Error al enviar la alerta.";
                         }
                     })
                     .catch(() => {
                         statusDiv.style.color = "red";
-                        statusDiv.textContent = "Error de red.";
+                        statusDiv.textContent = "Error de red con el servidor.";
                     });
                 }, () => {
                     statusDiv.style.color = "red";
